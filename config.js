@@ -14,7 +14,7 @@ var log = {
 };
 
 var messages = {
-    start:                  'Chargement du bot!',
+    start:                  'Chargement du bot',
     stop:                   'Extiction du bot!',
     welcome_message:        'Bienvenue sur le compte de @Tchekda'
 };
