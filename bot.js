@@ -12,7 +12,7 @@ var config = require('./config.js'),
     optsError = {logFilePath: logErrorFile, timestampFormat: "YYYY-MM-DD HH:mm:ss"},
     logInfo = SimpleNodeLogger.createSimpleLogger(optsInfo), logError = SimpleNodeLogger.createSimpleLogger(optsError);
 
-fs.existsSync(config.log.logDir) ? fs.existsSync(logInfoFile) && fs.existsSync(logErrorFile) || createFiles() : (fs.mkdirSync(config.log.logDir), createFiles());
+if(!fs.existsSync(config.log.logDir)){fs.mkdirSync(config.log.logDir);createFiles();}else if (!fs.existsSync(logInfoFile) && !fs.existsSync(logErrorFile)) {createFiles();}
 
 function createFiles(){fs.writeFile(logInfoFile,"",function(o){if(o)throw o;console.log(config.log.logInfoFile+" has been created")}),fs.writeFile(logErrorFile,"",function(o){if(o)throw o;console.log(config.log.logErrorFile+" has been created")})}
 
