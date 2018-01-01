@@ -1,10 +1,10 @@
 {
     "name": "Twitter_Bot",
-    "version": "1.0.0",
-    "description": "Bot twitter du compte @Tchekda",
+    "version": "0.1.0",
+    "description": "Twitter Bot by Tchekda",
     "scripts": {
         "start": "node bot.js",
-        "stop": "node bot.js stop"
+        "stop": "killall node"
     },
     "dependencies": {
         "twit": "~2.2"

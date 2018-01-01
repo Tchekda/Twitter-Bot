@@ -1,13 +1,13 @@
 var config = require('./config.js');
 var Twit = require('twit');
 var eventModule = require('./twitter-event.js');
-var twit = new Twit(config);
+var twit = new Twit(config.data);
 var stream = twit.stream('user');
 var stdin = process.openStdin();
 
 eventModule.init(config, twit);
 
-console.log(config.start);
+console.log(config.log.start);
 setWelcome();
 
 stream.on('tweet', identified);
@@ -20,7 +20,7 @@ stdin.addListener("data", function (d) {
     var input = d.toString().trim();
     switch (input.split(' ')[0]) {
         case 'stop':
-            console.log(config.stop);
+            console.log(config.log.stop);
             process.exit();
             break;
         case 'clear':

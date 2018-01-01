@@ -10,7 +10,7 @@ var identified = function (event) {
     var replyto = event.in_reply_to_screen_name;
     var from = event.user.screen_name;
 
-    if(replyto === config.user){
+    if(replyto === config.data.user){
         likeTweet(event.id_str, from);
     }
 };
@@ -18,7 +18,7 @@ var identified = function (event) {
 var followed = function (event) {
     var sourceName = event.source.name;
     var screenName = event.source.screen_name;
-    if(screenName !== config.user){
+    if(screenName !== config.data.user){
         console.log(sourceName + ' a commencé à vous suivre : @' + screenName);
         tweetText('@' + screenName + ' merci du follow! #Subscribe');
     }
@@ -27,7 +27,7 @@ var followed = function (event) {
 var quoted = function (event) {
     var replyto = event.source.screen_name;
 
-    if(replyto !== config.user){
+    if(replyto !== config.data.user){
         likeTweet(event.target_object.id_str, event.target_object.user.screen_name);
     }
 };
@@ -52,7 +52,7 @@ var setWelcomeMessage = function () {
     var params = {
         "welcome_message": {
             "message_data": {
-                "text": config.welcome_message,
+                "text": config.log.welcome_message,
                 "ctas": [
                     {
                         "type": "web_url",
@@ -119,7 +119,7 @@ var deleteTweet = function (tweetID) {
 var receiveMessage = function (event) {
     var to = event.direct_message.recipient.screen_name;
     var splited = event.direct_message.text.toLowerCase().split(' ');
-    if (to === config.user) {
+    if (to === config.data.user) {
         if (splited.indexOf('bot') !== -1) {
             //Contient bot
         }
@@ -128,14 +128,15 @@ var receiveMessage = function (event) {
 
 var getTweetID = function (text) {
     var params = {
-        q: text + ' from:' + config.user
+        q: text + ' from:' + config.data.user
     };
     twit.get('search/tweets', params, receiveTweet);
 
     function receiveTweet(err, data) {
 
+        var tweetID;
         if (err) {
-            console.log('Une erreure est survenue : ' + err)
+            console.log('Une erreure est survenue : ' + err);
             tweetID = null;
         } else {
             console.log(data);
@@ -148,7 +149,7 @@ var getTweetID = function (text) {
         }
         return tweetID;
     }
-}
+};
 
 module.exports = {
     init:               init,
@@ -157,6 +158,6 @@ module.exports = {
     quoted:             quoted,
     identified:         identified,
     followed:           followed,
-    receiveMessage:     receiveMessage,
-}
+    receiveMessage:     receiveMessage
+};
 
