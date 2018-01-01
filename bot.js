@@ -1,19 +1,30 @@
-var config = require('./config.js');
-var Twit = require('twit');
-var eventModule = require('./twitter-event.js');
-var twit = new Twit(config.data);
-var stream = twit.stream('user');
-var stdin = process.openStdin();
+var config = require('./config.js'),
+    Twit = require('twit'),
+    eventModule = require('./twitter-event.js'),
+    twit = new Twit(config.data),
+    stream = twit.stream('user'),
+    stdin = process.openStdin(),
+    fs = require('fs'),
+    logInfoFile = config.log.logDir + config.log.logInfoFile,
+    logErrorFile = config.log.logDir + config.log.logErrorFile,
+    SimpleNodeLogger = require("simple-node-logger"),
+    optsInfo = {logFilePath: logInfoFile, timestampFormat: "YYYY-MM-DD HH:mm:ss"},
+    optsError = {logFilePath: logErrorFile, timestampFormat: "YYYY-MM-DD HH:mm:ss"},
+    logInfo = SimpleNodeLogger.createSimpleLogger(optsInfo), logError = SimpleNodeLogger.createSimpleLogger(optsError);
+
+fs.existsSync(config.log.logDir) ? fs.existsSync(logInfoFile) && fs.existsSync(logErrorFile) || createFiles() : (fs.mkdirSync(config.log.logDir), createFiles());
+
+function createFiles(){fs.writeFile(logInfoFile,"",function(o){if(o)throw o;console.log(config.log.logInfoFile+" has been created")}),fs.writeFile(logErrorFile,"",function(o){if(o)throw o;console.log(config.log.logErrorFile+" has been created")})}
 
 eventModule.init(config, twit);
 
-console.log(config.log.start);
-setWelcome();
+logInfo.info(config.messages.start);
+eventModule.setWelcomeMessage();
 
-stream.on('tweet', identified);
-stream.on('follow', followed);
-stream.on('quoted_tweet', quoted);
-stream.on('direct_message', receiveMessage);
+stream.on('tweet', eventModule.identified);
+stream.on('follow', eventModule.followed);
+stream.on('quoted_tweet', eventModule.quoted);
+stream.on('direct_message', eventModule.receiveMessage);
 
 
 stdin.addListener("data", function (d) {
@@ -31,4 +42,5 @@ stdin.addListener("data", function (d) {
             console.log('Commande inconnue!');
     }
 });
-function identified(e){eventModule.identified(e)}function followed(e){eventModule.followed(e)}function quoted(e){eventModule.quoted(e)}function receiveMessage(e){eventModule.receiveMessage(e)}function tweetIt(e){eventModule.tweetText(e)}function setWelcome(){eventModule.setWelcomeMessage()}
+
+

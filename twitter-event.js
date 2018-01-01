@@ -52,24 +52,7 @@ var setWelcomeMessage = function () {
     var params = {
         "welcome_message": {
             "message_data": {
-                "text": config.log.welcome_message,
-                "ctas": [
-                    {
-                        "type": "web_url",
-                        "label": "Ma chaine YouTube",
-                        "url": "https://www.youtube.com/channel/UCx5CZE6SSovbUK1dvlylJkA"
-                    },
-                    {
-                        "type": "web_url",
-                        "label": "Mon site web",
-                        "url": "https://www.codeschool.fr"
-                    },
-                    {
-                        "type": "web_url",
-                        "label": "Abonner",
-                        "url": "https://twitter.com/intent/follow?screen_name=tchekda"
-                    }
-                ]
+                "text": config.messages.welcome_message
             }
         }
     };
@@ -78,7 +61,7 @@ var setWelcomeMessage = function () {
 
     function sended(err){
         if(err){
-            console.log('Une erreure est survenue : ' + err)
+            console.log('An error occured ' + err)
         }else{
             console.log('Le message d\'accueil a bien été définis : ' + params.welcome_message.message_data.text);
         }
