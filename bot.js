@@ -23,8 +23,8 @@ stdin.addListener("data", function(d) {
             break;
         case 'clear':
             process.stdout.write("\u001b[2J\u001b[0;0H");
-            console.log('Cleared!')
-            break
+            console.log('Cleared!');
+            break;
         default:
             console.log('Commande inconnue!');
     }
@@ -43,7 +43,7 @@ function followed(event){
     var sourceName = event.source.name;
     var screenName = event.source.screen_name;
     console.log(event);
-    if(screenName != config.user){
+    if(screenName !== config.user){
         console.log(sourceName + ' a commencé à vous suivre : @' + screenName);
         tweetIt('@' + screenName + ' merci du follow! #Subscribe');
     }
@@ -53,7 +53,7 @@ function quoted(event){
     var replyto = event.source.screen_name;
     var from = event.target_object.user.screen_name;
 
-    if(replyto != config.user){
+    if(replyto !== config.user){
         likeIt(event.target_object.id_str, event.target_object.user.screen_name);
     }
 }
@@ -62,7 +62,7 @@ function messaged(event){
     var to = event.direct_message.recipient.screen_name;
     var splited = event.direct_message.text.toLowerCase().split(' ');
     if(to === config.user){
-        if(splited.indexOf('bot') != -1){
+        if(splited.indexOf('bot') !== -1){
             //Contient bot
         }
     }}
@@ -70,7 +70,7 @@ function messaged(event){
 function tweetIt(text){
     var params = {
         status : text
-    }
+    };
 
     function logData(err, data, response){
         if(err){
@@ -97,7 +97,7 @@ function replaceTweet(text){
 function getTweetId(text, fonction){
     var params = {
         q : text + ' from:' + config.user
-    }
+    };
     T.get('search/tweets', params, receiveTweet);
     function receiveTweet(err, data, response){
 
@@ -108,7 +108,7 @@ function getTweetId(text, fonction){
             if(data.statuses.length === 0){
                 tweetID = null;
             }else{
-                console.log(data.statuses.length)
+                console.log(data.statuses.length);
                 tweetID = data.statuses[0].id_str;
             }
             fonction(tweetID);
@@ -120,7 +120,7 @@ function getTweetId(text, fonction){
 function deleteTweet(tweetId){
         var params = {
             id : tweetId
-        }
+        };
         T.post('statuses/destroy', params, deleted);
         function deleted(err, data, response){
             if(err){
@@ -134,7 +134,7 @@ function deleteTweet(tweetId){
 function likeIt(tweetId, name){
     var params = {
         id : tweetId
-    }
+    };
 
     T.post('favorites/create', params, liked);
 
@@ -150,7 +150,7 @@ function likeIt(tweetId, name){
 function sendIt(name, msg){
     var params = {
         id : tweetId
-    }
+    };
 
     T.post('favorites/create', params, liked);
 
@@ -186,7 +186,7 @@ function setWelcome(){
           ]
         }
       }
-    }
+    };
 
     T.post('direct_messages/welcome_messages/new', params, sended);
 
