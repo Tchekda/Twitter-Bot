@@ -1,7 +1,10 @@
+//Setting up local varaibles
 var config = null;
 var twit = null;
 var errorLog = null;
 var infoLog = null;
+
+//Receive all data
 var init = function (infos) {
     config = infos.config;
     twit = infos.twit;
@@ -9,6 +12,7 @@ var init = function (infos) {
     infoLog = infos.infoLog;
 };
 
+//When you are identified in a tweet
 var identified = function (event) {
     var replyto = event.in_reply_to_screen_name;
     var from = event.user.screen_name;
@@ -18,6 +22,7 @@ var identified = function (event) {
     }
 };
 
+//When you are followed by someone
 var followed = function (event) {
     var sourceName = event.source.name;
     var screenName = event.source.screen_name;
@@ -27,6 +32,7 @@ var followed = function (event) {
     }
 };
 
+//When one of your tweet is quoted
 var quoted = function (event) {
     var replyto = event.source.screen_name;
 
@@ -35,6 +41,7 @@ var quoted = function (event) {
     }
 };
 
+//To Tweet some text
 var tweetText = function (text) {
     var params = {
         status : text
@@ -51,6 +58,7 @@ var tweetText = function (text) {
     twit.post('statuses/update', params, logData)
 };
 
+//Define Welcome Message in Direct Messages
 var setWelcomeMessage = function () {
     var params = {
         "welcome_message": {
@@ -71,6 +79,7 @@ var setWelcomeMessage = function () {
     }
 };
 
+//Like someone's tweet
 var likeTweet = function (tweetID, authorName) {
     var params = {
         id : tweetID
@@ -87,6 +96,7 @@ var likeTweet = function (tweetID, authorName) {
     }
 };
 
+//Delete one of your tweets
 var deleteTweet = function (tweetID) {
     var params = {
         id: tweetID
@@ -102,6 +112,7 @@ var deleteTweet = function (tweetID) {
     }
 };
 
+//When you receive a direct message
 var receiveMessage = function (event) {
     var to = event.direct_message.recipient.screen_name;
     var splited = event.direct_message.text.toLowerCase().split(' ');
@@ -112,6 +123,7 @@ var receiveMessage = function (event) {
     }
 };
 
+//Get ID of one of your tweets with the following text
 var getTweetID = function (text) {
     var params = {
         q: text + ' from:' + config.data.user
@@ -137,6 +149,7 @@ var getTweetID = function (text) {
     }
 };
 
+//export all functions to the main module (bot.js)
 module.exports = {
     init:               init,
     setWelcomeMessage:  setWelcomeMessage,
