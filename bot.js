@@ -10,16 +10,38 @@ var config = require('./config.js'),
     optsError = {logFilePath: config.log.logDir + config.log.logErrorFile, timestampFormat: "YYYY-MM-DD HH:mm:ss"},
     logInfo = SimpleNodeLogger.createSimpleLogger(optsInfo), logError = SimpleNodeLogger.createSimpleLogger(optsError);
 
-if(!fs.existsSync(config.log.logDir)){fs.mkdirSync(config.log.logDir);createFiles();}else if (!fs.existsSync(config.log.logDir + config.log.logInfoFile) && !fs.existsSync(config.log.logDir + config.log.logErrorFile)) {createFiles();}
+if (!fs.existsSync(config.log.logDir)) {
+    try {
+        fs.mkdirSync(config.log.logDir);
+    }catch (exception){
+        console.log('Impossible de créer le répertoire : ' + config.log.logDir);
+    }
+    createFiles();
+} else if (!fs.existsSync(config.log.logDir + config.log.logInfoFile) && !fs.existsSync(config.log.logDir + config.log.logErrorFile)) {
+    createFiles();
+}
 
-function createFiles(){fs.writeFile(config.log.logDir + config.log.logInfoFile,"",function(o){if(o)throw o;logInfo.info(config.log.logInfoFile+" has been created")}),fs.writeFile(config.log.logDir + config.log.logErrorFile,"",function(o){if(o)throw o;logInfo.info(config.log.logErrorFile+" has been created")})}
+function createFiles() {
+    try {
+        fs.writeFile(config.log.logDir + config.log.logInfoFile, "", function (o) {
+            if (o) throw o;
+            logInfo.info(config.log.logInfoFile + " has been created")
+        });
+        fs.writeFile(config.log.logDir + config.log.logErrorFile, "", function (o) {
+            if (o) throw o;
+            logInfo.info(config.log.logErrorFile + " has been created")
+        });
+    }catch (exception){
+        console.log('Impossible de créer les fichiers');
+    }
+}
 
 var infos = {
     config: config,
-    twit:   twit,
-    errorLog:   logError,
-    infoLog:    logInfo
-}
+    twit: twit,
+    errorLog: logError,
+    infoLog: logInfo
+};
 eventModule.init(infos);
 
 logInfo.info(config.messages.start);
