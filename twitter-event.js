@@ -1,9 +1,12 @@
 var config = null;
 var twit = null;
-
-var init = function (configuration, twitter) {
-    config = configuration;
-    twit = twitter;
+var errorLog = null;
+var infoLog = null;
+var init = function (infos) {
+    config = infos.config;
+    twit = infos.twit;
+    errorLog = infos.errorLog;
+    infoLog = infos.infoLog;
 };
 
 var identified = function (event) {
@@ -19,7 +22,7 @@ var followed = function (event) {
     var sourceName = event.source.name;
     var screenName = event.source.screen_name;
     if(screenName !== config.data.user){
-        console.log(sourceName + ' a commencé à vous suivre : @' + screenName);
+        infoLog.info(sourceName + ' a commencé à vous suivre : @' + screenName);
         tweetText('@' + screenName + ' merci du follow! #Subscribe');
     }
 };
@@ -39,9 +42,9 @@ var tweetText = function (text) {
 
     function logData(err){
         if(err){
-            console.log('Une erreure est survenue : ' + err)
+            errorLog.error('An error occured : ' + err);
         }else{
-            console.log('Votre Tweet à bien été envoyé : ' + text);
+            infoLog.info('Votre Tweet à bien été envoyé : ' + text);
         }
     }
 
@@ -61,9 +64,9 @@ var setWelcomeMessage = function () {
 
     function sended(err){
         if(err){
-            console.log('An error occured ' + err)
+            errorLog.error('An error occured : ' + err);
         }else{
-            console.log('Le message d\'accueil a bien été définis : ' + params.welcome_message.message_data.text);
+            infoLog.info('Le message d\'accueil a bien été définis : ' + params.welcome_message.message_data.text);
         }
     }
 };
@@ -77,9 +80,9 @@ var likeTweet = function (tweetID, authorName) {
 
     function liked(err){
         if(err){
-            console.log('Une erreure est survenue : ' + err)
+            errorLog.error('An error occured : ' + err);
         }else{
-            console.log('Le Tweet de @' + authorName + ' a bien été liké!');
+            infoLog.info('Le Tweet de @' + authorName + ' a bien été liké!');
         }
     }
 };
@@ -92,9 +95,9 @@ var deleteTweet = function (tweetID) {
 
     function deleted(err) {
         if (err) {
-            console.log('Une erreure est survenue : ' + err)
+            errorLog.error('An error occured : ' + err);
         } else {
-            console.log('Le Tweet à bien été supprimé');
+            infoLog.info('Le Tweet à bien été supprimé');
         }
     }
 };
@@ -119,7 +122,7 @@ var getTweetID = function (text) {
 
         var tweetID;
         if (err) {
-            console.log('Une erreure est survenue : ' + err);
+            errorLog.error('An error occured : ' + err);
             tweetID = null;
         } else {
             console.log(data);
@@ -137,7 +140,6 @@ var getTweetID = function (text) {
 module.exports = {
     init:               init,
     setWelcomeMessage:  setWelcomeMessage,
-    tweetText:          tweetText,
     quoted:             quoted,
     identified:         identified,
     followed:           followed,
