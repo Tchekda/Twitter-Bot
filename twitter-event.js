@@ -16,9 +16,13 @@ var init = function (infos) {
 var identified = function (event) {
     var replyto = event.in_reply_to_screen_name;
     var from = event.user.screen_name;
-
-    if(replyto === config.data.user){
-        likeTweet(event.id_str, from);
+    if (from != config.data.user){
+        for (var i = 0, len = event.entities.user_mentions.length; i < len; i++) {
+            if(event.entities.user_mentions[i].screen_name == config.data.user){
+                likeTweet(event.id_str, from);
+                return;
+            }
+        }
     }
 };
 
@@ -149,6 +153,22 @@ var getTweetID = function (text) {
     }
 };
 
+var retweetKeyWord = function (tweet) {
+    //retweetTweetID(tweet['id']);
+    infoLog.log(tweet);
+};
+
+var retweetTweetID = function (id) {
+    twit.post('statuses/retweet/:id', { id: id }, callback);
+    function callback(err, data){
+        if (err){
+            errorLog.error('An Error Occured while trying to retweet ' + err);
+        }else{
+            infoLog.log(data);
+        }
+    }
+};
+
 //export all functions to the main module (bot.js)
 module.exports = {
     init:               init,
@@ -156,6 +176,7 @@ module.exports = {
     quoted:             quoted,
     identified:         identified,
     followed:           followed,
-    receiveMessage:     receiveMessage
+    receiveMessage:     receiveMessage,
+    retweetKeyWords:    retweetKeyWord
 };
 

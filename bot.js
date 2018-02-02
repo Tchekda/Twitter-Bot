@@ -3,7 +3,9 @@ var config = require('./config.js'),                //Load configuration
     Twit = require('twit'),                         //Load Twitter API
     eventModule = require('./twitter-event.js'),    //Load functions on Twitter API
     twit = new Twit(config.data),                   //Initializing the Twitter API
-    stream = twit.stream('user', null),             //Starting Stream flux on user key of Twittr API
+    publicStreamData = {track: config.data.retweetWords},
+    userStream = twit.stream('user', null),         //Starting Stream flux on user actions
+    publicStream = twit.stream('statuses/filter', publicStreamData),                 //Starting stream on public actions
     stdin = process.openStdin(),                    //Listen console commands
     fs = require('fs'),                             //Load file gestionnary
     SimpleNodeLogger = require("simple-node-logger"),// Load logger
@@ -11,6 +13,15 @@ var config = require('./config.js'),                //Load configuration
     optsError = {logFilePath: config.log.logDir + config.log.logErrorFile, timestampFormat: "YYYY-MM-DD HH:mm:ss"}, //options of Error Logger
     logInfo = SimpleNodeLogger.createSimpleLogger(optsInfo), //Define Info Logger
     logError = SimpleNodeLogger.createSimpleLogger(optsError); //Define Error Logger
+
+var infos = { //Define data for twitter-event.js
+    config: config,
+    twit: twit,
+    errorLog: logError,
+    infoLog: logInfo
+};
+eventModule.init(infos); //Initializing data to twitter-event.js
+
 // Creation of logging files and directory
 if (!fs.existsSync(config.log.logDir)) { //If log Directory does not exist
     try {
@@ -41,22 +52,16 @@ function createFiles() {
     });
 }
 
-var infos = { //Define data for twitter-event.js
-    config: config,
-    twit: twit,
-    errorLog: logError,
-    infoLog: logInfo
-};
-eventModule.init(infos); //Sending data to twitter-event.js
 
 logInfo.info(config.messages.start); //Log init bot = All seems good
 
 
 //Setting up all streams
-stream.on('tweet', eventModule.identified);
-stream.on('follow', eventModule.followed);
-stream.on('quoted_tweet', eventModule.quoted);
-stream.on('direct_message', eventModule.receiveMessage);
+userStream.on('tweet', eventModule.identified);
+userStream.on('follow', eventModule.followed);
+userStream.on('quoted_tweet', eventModule.quoted);
+userStream.on('direct_message', eventModule.receiveMessage);
+publicStream.on('tweet', eventModule.retweetKeyWords);
 
 //Define listener of console commands
 stdin.addListener("data", function (d) {

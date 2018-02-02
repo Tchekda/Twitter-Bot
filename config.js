@@ -4,11 +4,14 @@ var data = { //Define all data for Twitter API
     access_token:           '883737566381473792-Gr2ejQgcFxaJH5sLWHNpl3HwoxVb7Qc',
     access_token_secret:    'nx2WX80mWKed2J6r7GBEIthUEWXC9IPMgJDsfAyyp5ydn',
     timeout_ms:             60 * 1000,
-    user:                   'Tchekda'
+    user:                   'Tchekda',
+    retweetWords: [ //KeyWords you want to retweet
+        '#TchekdaRetweet'
+    ]
 };
 
 var log = { //Define all Data for the Logger
-    logDir:             '/var/log/twitter/',
+    logDir:             'log/',
     logInfoFile:        'info.log',
     logErrorFile:       'error.log'
 };
