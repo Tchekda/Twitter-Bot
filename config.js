@@ -1,13 +1,11 @@
-var data = { //Define all data for Twitter API
-    consumer_key:           'jOsVyauB3XM4AvlJzF3JbdbRx',
-    consumer_secret:        'AcDkRg0uos0JBJ8RWLbtBP2lBFDqAayK2sObpJMsTUHxoYUKGt',
-    access_token:           '883737566381473792-Gr2ejQgcFxaJH5sLWHNpl3HwoxVb7Qc',
-    access_token_secret:    'nx2WX80mWKed2J6r7GBEIthUEWXC9IPMgJDsfAyyp5ydn',
+var data = { //Define all data for Twitter API "https://apps.twitter.com"
+    consumer_key:           '',
+    consumer_secret:        '',
+    access_token:           '',
+    access_token_secret:    '',
     timeout_ms:             60 * 1000,
-    user:                   'Tchekda',
-    retweetWords: [ //KeyWords you want to retweet
-        '#TchekdaRetweet'
-    ]
+    user:                   '', //Your @username
+    retweetWords: [] //Keywords to retweet
 };
 
 var log = { //Define all Data for the Logger
@@ -19,7 +17,7 @@ var log = { //Define all Data for the Logger
 var messages = { //Define custom messages
     start:                  'Bot Loading...',
     stop:                   'Bot Shutting Down',
-    welcome_message:        'Bienvenue sur le compte de @Tchekda'
+    welcome_message:        'Welcome in my DM\'s'
 };
 
 //Export all data to the main module (bot.js)
