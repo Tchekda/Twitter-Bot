@@ -68,7 +68,7 @@ stdin.addListener("data", function (d) {
     var input = d.toString().trim();
     switch (input.split(' ')[0]) {
         case 'stop':
-            console.log(config.log.stop);
+            console.log(config.messages.stop);
             process.exit();
             break;
         case 'clear':
