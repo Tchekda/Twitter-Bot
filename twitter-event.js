@@ -1,8 +1,8 @@
 //Setting up local varaibles
-var config = null;
-var twit = null;
-var errorLog = null;
-var infoLog = null;
+var config = null,
+    twit = null,
+    errorLog = null,
+    infoLog = null;
 
 //Receive all data
 var init = function (infos) {
@@ -14,13 +14,11 @@ var init = function (infos) {
 
 //When you are identified in a tweet
 var identified = function (event) {
-    var replyto = event.in_reply_to_screen_name;
-    var from = event.user.screen_name;
-    if (from != config.data.user){
+    if (event.user.id != config.data.user.userID){
         for (var i = 0, len = event.entities.user_mentions.length; i < len; i++) {
-            if(event.entities.user_mentions[i].screen_name == config.data.user){
-                likeTweet(event.id_str, from);
-                return;
+            if(event.entities.user_mentions[i].id == config.data.user.userID){
+                likeTweet(event.id_str, event.user);
+                break;
             }
         }
     }
@@ -28,20 +26,16 @@ var identified = function (event) {
 
 //When you are followed by someone
 var followed = function (event) {
-    var sourceName = event.source.name;
-    var screenName = event.source.screen_name;
-    if(screenName !== config.data.user){
-        infoLog.info(sourceName + ' a commencé à vous suivre : @' + screenName);
-        tweetText('@' + screenName + ' merci du follow! #Subscribe');
+    if(event.source.id !== config.data.user.userID){
+        infoLog.info(replaceAll(config.console.new_follower, event.source.screen_name, event.source.name));
+        tweetText(replaceAll(config.messages.new_follower, event.source.screen_name, event.source.name));
     }
 };
 
 //When one of your tweet is quoted
 var quoted = function (event) {
-    var replyto = event.source.screen_name;
-
-    if(replyto !== config.data.user){
-        likeTweet(event.target_object.id_str, event.target_object.user.screen_name);
+    if(event.source.id !== config.data.user.userID){
+        likeTweet(event.target_object.id_str, event.target_object.user);
     }
 };
 
@@ -50,16 +44,14 @@ var tweetText = function (text) {
     var params = {
         status : text
     };
-
+    twit.post('statuses/update', params, logData)
     function logData(err){
         if(err){
             errorLog.error('An error occured : ' + err);
         }else{
-            infoLog.info('Votre Tweet à bien été envoyé : ' + text);
+            infoLog.info(config.console.tweeted.replace('/%text%/gi', text));
         }
     }
-
-    twit.post('statuses/update', params, logData)
 };
 
 //Define Welcome Message in Direct Messages
@@ -78,13 +70,13 @@ var setWelcomeMessage = function () {
         if(err){
             errorLog.error('An error occured : ' + err);
         }else{
-            infoLog.info('Le message d\'accueil a bien été définis : ' + params.welcome_message.message_data.text);
+            infoLog.info(config.console.welcome_message_defined.replace('/%text%/gi', params.welcome_message.message_data.text))
         }
     }
 };
 
 //Like someone's tweet
-var likeTweet = function (tweetID, authorName) {
+var likeTweet = function (tweetID, author) {
     var params = {
         id : tweetID
     };
@@ -95,7 +87,7 @@ var likeTweet = function (tweetID, authorName) {
         if(err){
             errorLog.error('An error occured : ' + err);
         }else{
-            infoLog.info('Le Tweet de @' + authorName + ' a bien été liké!');
+            infoLog.info(replaceAll(config.console.liked, author.screen_name, author.name));
         }
     }
 };
@@ -111,7 +103,7 @@ var deleteTweet = function (tweetID) {
         if (err) {
             errorLog.error('An error occured : ' + err);
         } else {
-            infoLog.info('Le Tweet à bien été supprimé');
+            infoLog.info(config.console.tweet_deleted);
         }
     }
 };
@@ -120,9 +112,9 @@ var deleteTweet = function (tweetID) {
 var receiveMessage = function (event) {
     var to = event.direct_message.recipient.screen_name;
     var splited = event.direct_message.text.toLowerCase().split(' ');
-    if (to === config.data.user) {
+    if (event.direct_message.recipient.id === config.data.user.userID) {
         if (splited.indexOf('bot') !== -1) {
-            //Contient bot
+            //In developpement
         }
     }
 };
@@ -132,20 +124,16 @@ var getTweetID = function (text) {
     var params = {
         q: text + ' from:' + config.data.user
     };
-    twit.get('search/tweets', params, receiveTweet);
+    twit.get('search/tweets', params, tweets);
 
-    function receiveTweet(err, data) {
-
-        var tweetID;
+    function tweets(err, data) {
+        var tweetID = null;
         if (err) {
             errorLog.error('An error occured : ' + err);
-            tweetID = null;
         } else {
-            console.log(data);
             if (data.statuses.length === 0) {
                 tweetID = null;
             } else {
-                console.log(data.statuses.length);
                 tweetID = data.statuses[0].id_str;
             }
         }
@@ -154,8 +142,7 @@ var getTweetID = function (text) {
 };
 
 var retweetKeyWord = function (tweet) {
-    //retweetTweetID(tweet['id']);
-    infoLog.log(tweet);
+    //In developpement
 };
 
 var retweetTweetID = function (id) {
@@ -164,10 +151,18 @@ var retweetTweetID = function (id) {
         if (err){
             errorLog.error('An Error Occured while trying to retweet ' + err);
         }else{
-            infoLog.log(data);
+            infoLog.log(replaceAll(config.console.retweeted, data.user.screen_name, data.user.name));
         }
     }
 };
+
+var regexAll = function(text, username = null, name = null) {
+    if (username)
+        text.replace("/%username%/gi", username);
+    if (name)
+        text.replace("/%name%/gi", name);
+    return text;
+}
 
 //export all functions to the main module (bot.js)
 module.exports = {
