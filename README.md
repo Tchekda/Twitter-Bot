@@ -6,7 +6,7 @@ A simple Twitter Bot maded in NodeJS to make your account more responsive, this 
 
 **Requirements**:
 
- * You need to have installed[Node](https://nodejs.org/en/download/)(At least the 8.x version)
+ * You need to have installed [Node](https://nodejs.org/en/download/)(At least the 8.x version)
 
  * You alse need to have installed Git to 
   
