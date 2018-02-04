@@ -1,6 +1,6 @@
 {
     "name": "Twitter_Bot",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Twitter Bot by Tchekda",
     "scripts": {
         "start": "node bot.js",
@@ -9,5 +9,10 @@
     "dependencies": {
         "simple-node-logger": "^0.93.37",
         "twit": "~2.2"
-    }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/Tchekda/twitterbot.git"
+    },
+    "private": true
 }
