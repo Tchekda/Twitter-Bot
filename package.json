@@ -7,7 +7,7 @@
         "stop": "killall node"
     },
     "dependencies": {
-        "simple-node-logger": "^0.93.33",
+        "simple-node-logger": "^0.93.37",
         "twit": "~2.2"
     }
 }
