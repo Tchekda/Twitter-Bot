@@ -76,7 +76,7 @@ stdin.addListener("data", function (d) {
             console.log('Cleared!');
             break;
         default:
-            console.log('Commande inconnue!');
+            console.log('Unknown Command');
     }
 });
 
