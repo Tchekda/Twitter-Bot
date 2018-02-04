@@ -14,5 +14,24 @@
         "type": "git",
         "url": "git://github.com/Tchekda/twitterbot.git"
     },
-    "private": true
+    "private": true,
+    "keywords": [
+        "twitter",
+        "tchekda",
+        "bot"
+    ],
+    "homepage": "https://github.com/Tchekda/twitterbot",
+    "license": "UNLICENSED",
+    "bugs": {
+        "url": "https://github.com/Tchekda/twitterbot/issues",
+        "email": "tchekda@gmail.com"
+    },
+    "author": {
+        "name": "Tchekda",
+        "email": "tchekda@gmail.com"
+    },
+    "contributors": [
+        "ttzel (https://github.com/ttezel/twit)"
+     ],
+     "engines" : { "node" : ">=8.2.0" }
 }
