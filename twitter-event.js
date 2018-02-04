@@ -14,9 +14,9 @@ var init = function (infos) {
 
 //When you are identified in a tweet
 var identified = function (event) {
-    if (event.user.id != config.data.user.userID){
+    if (event.user.id != config.data.userID){
         for (var i = 0, len = event.entities.user_mentions.length; i < len; i++) {
-            if(event.entities.user_mentions[i].id == config.data.user.userID){
+            if(event.entities.user_mentions[i].id == config.data.userID){
                 likeTweet(event.id_str, event.user);
                 break;
             }
@@ -26,7 +26,7 @@ var identified = function (event) {
 
 //When you are followed by someone
 var followed = function (event) {
-    if(event.source.id !== config.data.user.userID){
+    if(event.source.id !== config.data.userID){
         infoLog.info(replaceAll(config.console.new_follower, event.source.screen_name, event.source.name));
         tweetText(replaceAll(config.messages.new_follower, event.source.screen_name, event.source.name));
     }
@@ -34,7 +34,7 @@ var followed = function (event) {
 
 //When one of your tweet is quoted
 var quoted = function (event) {
-    if(event.source.id !== config.data.user.userID){
+    if(event.source.id !== config.data.userID){
         likeTweet(event.target_object.id_str, event.target_object.user);
     }
 };
@@ -70,7 +70,7 @@ var setWelcomeMessage = function () {
         if(err){
             errorLog.error('An error occured : ' + err);
         }else{
-            infoLog.info(config.console.welcome_message_defined.replace('/%text%/gi', params.welcome_message.message_data.text))
+            infoLog.info(config.console.welcome_message_defined.replace(/%text%/gi, params.welcome_message.message_data.text))
         }
     }
 };
@@ -112,7 +112,7 @@ var deleteTweet = function (tweetID) {
 var receiveMessage = function (event) {
     var to = event.direct_message.recipient.screen_name;
     var splited = event.direct_message.text.toLowerCase().split(' ');
-    if (event.direct_message.recipient.id === config.data.user.userID) {
+    if (event.direct_message.recipient.id === config.data.userID) {
         if (splited.indexOf('bot') !== -1) {
             //In developpement
         }
@@ -158,9 +158,9 @@ var retweetTweetID = function (id) {
 
 var regexAll = function(text, username = null, name = null) {
     if (username)
-        text.replace("/%username%/gi", username);
+        text.replace(/%username%/gi, username);
     if (name)
-        text.replace("/%name%/gi", name);
+        text.replace(/%name%/gi, name);
     return text;
 }
 

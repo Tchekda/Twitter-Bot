@@ -53,7 +53,7 @@ function createFiles() {
 }
 
 
-logInfo.info(config.messages.start); //Log init bot = All seems good
+logInfo.info(config.console.start); //Log init bot = All seems good
 
 
 //Setting up all streams

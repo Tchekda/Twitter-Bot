@@ -4,10 +4,8 @@ var data = { //Define all data for Twitter API "https://apps.twitter.com"
     access_token:           '',
     access_token_secret:    '',
     timeout_ms:             60 * 1000,
-    user = {
-        username:           '', //Your @username
-        userID:             '' //Your Owner ID
-    },
+    username:               '', //Your @username
+    userID:                 '', //Your Owner ID
     retweetWords: [] //Keywords to retweet
 };
 
@@ -34,4 +32,4 @@ var console = {
 }
 
 //Export all data to the main module (bot.js)
-module.exports={data:data,log:log,messages:messages};
+module.exports={data:data,log:log,messages:messages,console:console};
