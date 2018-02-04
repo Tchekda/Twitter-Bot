@@ -7,18 +7,18 @@ var data = { //Define all data for Twitter API "https://apps.twitter.com"
     username:               '', //Your @username
     userID:                 '', //Your Owner ID
     retweetWords: [] //Keywords to retweet
-};
+}
 
 var log = { //Define all Data for the Logger
     logDir:             'log/',
     logInfoFile:        'info.log',
     logErrorFile:       'error.log'
-};
+}
 
 var messages = { //Define custom messages
     welcome_message:        'Welcome in my DM\'s',
     new_follower:           '@%username% has just followed me!'
-};
+}
 
 var console = {
     start:                  'Bot Loading...',
@@ -32,4 +32,4 @@ var console = {
 }
 
 //Export all data to the main module (bot.js)
-module.exports={data:data,log:log,messages:messages,console:console};
+module.exports={data:data,log:log,messages:messages,console:console}
