@@ -87,7 +87,7 @@ var likeTweet = function (tweetID, author) {
         if(err){
             errorLog.error('An error occured : ' + err)
         }else{
-            infoLog.info(replaceAll(config.console.liked, author.screen_name, author.name))
+            infoLog.info(regexAll(config.console.liked, author.screen_name, author.name))
         }
     }
 }
@@ -158,10 +158,10 @@ var retweetTweetID = function (id) {
 }
 
 var regexAll = function(text, username = null, name = null) {
-    if (username)
-        text.replace(/%username%/gi, username)
-    if (name)
-        text.replace(/%name%/gi, name)
+    if (username != null)
+        text = text.replace(/%username%/gi, username)
+    if (name != null)
+        text = text.replace(/%name%/gi, name)
     return text
 }
 
