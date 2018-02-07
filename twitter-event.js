@@ -27,8 +27,8 @@ var identified = function (event) {
 //When you are followed by someone
 var followed = function (event) {
     if(event.source.id !== config.data.userID){
-        infoLog.info(replaceAll(config.console.new_follower, event.source.screen_name, event.source.name))
-        tweetText(replaceAll(config.messages.new_follower, event.source.screen_name, event.source.name))
+        infoLog.info(regexAll(config.console.new_follower, event.source.screen_name, event.source.name))
+        tweetText(regexAll(config.messages.new_follower, event.source.screen_name, event.source.name))
     }
 }
 
@@ -152,7 +152,7 @@ var retweetTweetID = function (id) {
         if (err){
             errorLog.error('An Error Occured while trying to retweet ' + err)
         }else{
-            infoLog.log(replaceAll(config.console.retweeted, data.user.screen_name, data.user.name))
+            infoLog.log(regexAll(config.console.retweeted, data.user.screen_name, data.user.name))
         }
     }
 }
