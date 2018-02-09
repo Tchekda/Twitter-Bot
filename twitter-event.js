@@ -34,7 +34,7 @@ var followed = function (event) {
 
 //When one of your tweet is quoted
 var quoted = function (event) {
-    if(event.source.id !== config.data.userID){
+    if(event.source.id != config.data.userID){
         likeTweet(event.target_object.id_str, event.target_object.user)
     }
 }
@@ -49,7 +49,7 @@ var tweetText = function (text) {
         if(err){
             errorLog.error('An error occured : ' + err)
         }else{
-            infoLog.info(config.console.tweeted.replace('/%text%/gi', text))
+            infoLog.info(config.console.tweeted.replace(/%text%/gi, text))
         }
     }
 }

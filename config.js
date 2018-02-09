@@ -5,7 +5,7 @@ var data = { //Define all data for Twitter API "https://apps.twitter.com"
     access_token_secret:    '',
     timeout_ms:             60 * 1000,
     username:               '', //Your @username
-    userID:                 '', //Your Owner ID
+    userID:                 0, //Your Owner ID
     retweetWords: [] //Keywords to retweet
 }
 
