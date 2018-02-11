@@ -70,15 +70,15 @@ stdin.addListener("data", function (d) {
         args = inputString.split(' ').shift()
     switch (command) {
         case 'stop':
-            logInfo.log(config.console.stop)
-            process.exit()
+            logInfo.info(config.console.stop)
+            setTimeout(function () {process.exit()}, 0.001) //Otherwise the log hasn't the time to be written
             break
         case 'clear':
             process.stdout.write("\u001b[2J\u001b[00H")
             console.log('Cleared!')
             break
         default:
-            console.log('Unknown Command : ' + command)
+            logError.error('Unknown Command : ' + command)
     }
 })
 
