@@ -67,7 +67,7 @@ publicStream.on('tweet', eventModule.retweetKeyWords)
 stdin.addListener("data", function (d) {
     let inputString = d.toString().trim(),
         command = inputString.split(' ')[0],
-        args = inputString.split.shift()
+        args = inputString.split(' ').shift()
     switch (command) {
         case 'stop':
             console.log(config.console.stop)
