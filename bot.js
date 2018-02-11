@@ -70,7 +70,7 @@ stdin.addListener("data", function (d) {
         args = inputString.split(' ').shift()
     switch (command) {
         case 'stop':
-            console.log(config.console.stop)
+            logInfo.log(config.console.stop)
             process.exit()
             break
         case 'clear':
