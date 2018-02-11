@@ -2,14 +2,14 @@
 var config = null,
     twit = null,
     errorLog = null,
-    infoLog = null;
+    infoLog = null
 
 //Receive all data
 var init = function (infos) {
-    config = infos.config;
-    twit = infos.twit;
-    errorLog = infos.errorLog;
-    infoLog = infos.infoLog;
+    config = infos.config
+    twit = infos.twit
+    errorLog = infos.errorLog
+    infoLog = infos.infoLog
 }
 
 //When you are identified in a tweet
@@ -111,7 +111,7 @@ var deleteTweet = function (tweetID) {
 //When you receive a direct message
 var receiveMessage = function (event) {
     var to = event.direct_message.recipient.screen_name,
-        splited = event.direct_message.text.toLowerCase().split(' ');
+        splited = event.direct_message.text.toLowerCase().split(' ')
     if (event.direct_message.recipient.id === config.data.userID) {
         if (splited.indexOf('bot') !== -1) {
             //In developpement
