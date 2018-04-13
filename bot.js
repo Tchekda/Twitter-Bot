@@ -1,5 +1,5 @@
-//Initialisation of all variables needed in the bot
-var config = require('./config.js'),                //Load configuration
+//Initialisation of all letiables needed in the bot
+let config = require('./config.js'),                //Load configuration
     Twit = require('twit'),                         //Load Twitter API
     eventModule = require('./twitter-event.js'),    //Load functions on Twitter API
     twit = new Twit(config.data),                   //Initializing the Twitter API
@@ -14,7 +14,7 @@ var config = require('./config.js'),                //Load configuration
     logInfo = SimpleNodeLogger.createSimpleLogger(optsInfo), //Define Info Logger
     logError = SimpleNodeLogger.createSimpleLogger(optsError) //Define Error Logger
 
-var infos = { //Define data for twitter-event.js
+let infos = { //Define data for twitter-event.js
     config: config,
     twit: twit,
     errorLog: logError,

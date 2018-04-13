@@ -1,11 +1,11 @@
-//Setting up local varaibles
-var config = null,
+//Setting up local letaibles
+let config = null,
     twit = null,
     errorLog = null,
     infoLog = null
 
 //Receive all data
-var init = function (infos) {
+let init = function (infos) {
     config = infos.config
     twit = infos.twit
     errorLog = infos.errorLog
@@ -13,9 +13,9 @@ var init = function (infos) {
 }
 
 //When you are identified in a tweet
-var identified = function (event) {
+let identified = function (event) {
     if (event.user.id != config.data.userID){
-        for (var i = 0, len = event.entities.user_mentions.length; i < len; i++) {
+        for (let i = 0, len = event.entities.user_mentions.length; i < len; i++) {
             if(event.entities.user_mentions[i].id == config.data.userID){
                 likeTweet(event.id_str, event.user)
                 break
@@ -25,7 +25,7 @@ var identified = function (event) {
 }
 
 //When you are followed by someone
-var followed = function (event) {
+let followed = function (event) {
     if(event.source.id !== config.data.userID){
         infoLog.info(regexAll(config.console.new_follower, event.source.screen_name, event.source.name))
         tweetText(regexAll(config.messages.new_follower, event.source.screen_name, event.source.name))
@@ -33,15 +33,15 @@ var followed = function (event) {
 }
 
 //When one of your tweet is quoted
-var quoted = function (event) {
+let quoted = function (event) {
     if(event.source.id != config.data.userID){
         likeTweet(event.target_object.id_str, event.target_object.user)
     }
 }
 
 //To Tweet some text
-var tweetText = function (text) {
-    var params = {
+let tweetText = function (text) {
+    let params = {
         status : text
     }
     twit.post('statuses/update', params, logData)
@@ -55,8 +55,8 @@ var tweetText = function (text) {
 }
 
 //Define Welcome Message in Direct Messages
-var setWelcomeMessage = function () {
-    var params = {
+let setWelcomeMessage = function () {
+    let params = {
         "welcome_message": {
             "message_data": {
                 "text": config.messages.welcome_message
@@ -76,8 +76,8 @@ var setWelcomeMessage = function () {
 }
 
 //Like someone's tweet
-var likeTweet = function (tweetID, author) {
-    var params = {
+let likeTweet = function (tweetID, author) {
+    let params = {
         id : tweetID
     }
 
@@ -93,8 +93,8 @@ var likeTweet = function (tweetID, author) {
 }
 
 //Delete one of your tweets
-var deleteTweet = function (tweetID) {
-    var params = {
+let deleteTweet = function (tweetID) {
+    let params = {
         id: tweetID
     }
     twit.post('statuses/destroy', params, deleted)
@@ -109,8 +109,8 @@ var deleteTweet = function (tweetID) {
 }
 
 //When you receive a direct message
-var receiveMessage = function (event) {
-    var to = event.direct_message.recipient.screen_name,
+let receiveMessage = function (event) {
+    let to = event.direct_message.recipient.screen_name,
         splited = event.direct_message.text.toLowerCase().split(' ')
     if (event.direct_message.recipient.id === config.data.userID) {
         if (splited.indexOf('bot') !== -1) {
@@ -120,15 +120,15 @@ var receiveMessage = function (event) {
 }
 
 //Get ID of one of your tweets with the following text
-var getTweetID = function (text) {
-    var params = {
+let getTweetID = function (text) {
+    let params = {
         q: text + ' from:' + config.data.user
     }
 
     twit.get('search/tweets', params, tweets)
 
     function tweets(err, data) {
-        var tweetID = null
+        let tweetID = null
         if (err) {
             errorLog.error('An error occured : ' + err)
         } else {
@@ -142,11 +142,11 @@ var getTweetID = function (text) {
     }
 }
 
-var retweetKeyWord = function (tweet) {
+let retweetKeyWord = function (tweet) {
     //In developpement
 }
 
-var retweetTweetID = function (id) {
+let retweetTweetID = function (id) {
     twit.post('statuses/retweet/:id', { id: id }, callback)
     function callback(err, data){
         if (err){
@@ -157,7 +157,7 @@ var retweetTweetID = function (id) {
     }
 }
 
-var regexAll = function(text, username = null, name = null) {
+let regexAll = function(text, username = null, name = null) {
     if (username != null)
         text = text.replace(/%username%/gi, username)
     if (name != null)
