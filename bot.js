@@ -4,7 +4,7 @@ let Twit =                  require('twit'),
     fs =                    require('fs'),
     simpleNodeLogger =      require("simple-node-logger")
 
-if (dotenv.error) throw result.error
+if (dotenv.error) throw dotenv.error
       
 //Load Custom Modules
 let eventModule =           require('./twitter-event.js') 
