@@ -1,62 +1,45 @@
-//Initialisation of all letiables needed in the bot
-let config = require('./config.js'),                //Load configuration
-    Twit = require('twit'),                         //Load Twitter API
-    eventModule = require('./twitter-event.js'),    //Load functions on Twitter API
-    twit = new Twit(config.data),                   //Initializing the Twitter API
-    publicStreamData = {track: config.data.retweetWords},
-    userStream = twit.stream('user', null),         //Starting Stream flux on user actions
-    publicStream = twit.stream('statuses/filter', publicStreamData),                 //Starting stream on public actions
-    stdin = process.openStdin(),                    //Listen console commands
-    fs = require('fs'),                             //Load file gestionnary
-    SimpleNodeLogger = require("simple-node-logger"),// Load logger
-    optsInfo = {logFilePath: config.log.logDir + config.log.logInfoFile, timestampFormat: "YYYY-MM-DD HH:mm:ss"}, //Options of Info Logger
-    optsError = {logFilePath: config.log.logDir + config.log.logErrorFile, timestampFormat: "YYYY-MM-DD HH:mm:ss"}, //options of Error Logger
-    logInfo = SimpleNodeLogger.createSimpleLogger(optsInfo), //Define Info Logger
-    logError = SimpleNodeLogger.createSimpleLogger(optsError) //Define Error Logger
+//Module Loaders
+let Twit =                  require('twit'),
+    dotenv =                require('dotenv').config(),
+    fs =                    require('fs'),
+    simpleNodeLogger =      require("simple-node-logger")
 
-let infos = { //Define data for twitter-event.js
-    config: config,
+if (dotenv.error) throw result.error
+      
+//Load Custom Modules
+let eventModule =           require('./twitter-event.js') 
+
+//Configure Log System
+let logDir = process.env.LOG_DIR
+    optsInfo = { logFilePath: logDir + process.env.LOG_INFO_FILE, timestampFormat: "YYYY-MM-DD HH:mm:ss" }, //Options of Info Logger
+    optsError = { logFilePath: logDir + process.env.LOG_ERROR_FILE, timestampFormat: "YYYY-MM-DD HH:mm:ss" }, //options of Error Logger
+    logInfo = simpleNodeLogger.createSimpleLogger(optsInfo), //Define Info Logger
+    logError = simpleNodeLogger.createSimpleLogger(optsError) //Define Error Logger
+    
+checkLogFiles(logDir) // Creation of logging files and directory
+logInfo.info(process.env.START) //Bot is Starting = All seems good
+
+//Init Constructors
+let twit = new Twit({
+    consumer_key:         process.env.CONSUMER_KEY,
+    consumer_secret:      process.env.CONSUMER_SECRET,
+    access_token:         process.env.ACCESS_TOKEN,
+    access_token_secret:  process.env.ACCESS_TOKEN_SECRET,
+    timeout_ms:           process.env.TIMEOUT_MS,  // optional HTTP request timeout to apply to all requests.
+    }),
+    stdin = process.openStdin() 
+    
+eventModule.init({ 
     twit: twit,
     errorLog: logError,
     infoLog: logInfo
-}
-eventModule.init(infos) //Initializing data to twitter-event.js
-
-// Creation of logging files and directory
-if (!fs.existsSync(config.log.logDir)) { //If log Directory does not exist
-    try {
-        fs.mkdirSync(config.log.logDir) //Create It
-    } catch (exception) {
-        console.log('Can\'t create the following directory : ' + config.log.logDir)
-        process.exit() // Quit to prevent crash
-    }
-    createFiles() //So create log files
-} else if (!fs.existsSync(config.log.logDir + config.log.logInfoFile) || !fs.existsSync(config.log.logDir + config.log.logErrorFile)) { //If one of the log files doesn't exist
-    createFiles() //Create them
-}
-
-function createFiles() {
-    fs.writeFile(config.log.logDir + config.log.logInfoFile, "", function (o) { //Create info Log file
-        if (o) {
-            console.log('Can\'t create the following file : ' + config.log.logDir + config.log.logInfoFile)
-            throw o
-        }
-        logInfo.info(config.log.logInfoFile + " has been created")
-    })
-    fs.writeFile(config.log.logDir + config.log.logErrorFile, "", function (o) { //Create Error Log file
-        if (o) {
-            console.log('Can\'t create the following file : ' + config.log.logDir + config.log.logErrorFile)
-            throw o
-        }
-        logInfo.info(config.log.logErrorFile + " has been created")
-    })
-}
-
-
-logInfo.info(config.console.start) //Log init bot = All seems good
+})
 
 
 //Setting up all streams
+let userStream = twit.stream('user', null),
+    publicStream = twit.stream('statuses/filter', {track: process.env.RETWEETKEYWORDS})
+
 userStream.on('tweet', eventModule.identified)
 userStream.on('follow', eventModule.followed)
 userStream.on('quoted_tweet', eventModule.quoted)
@@ -71,7 +54,7 @@ stdin.addListener("data", function (d) {
     switch (command) {
         case 'stop':
             logInfo.info(config.console.stop)
-            setTimeout(function () {process.exit()}, 0.001) //Otherwise the log hasn't the time to be written
+            setTimeout(function () { process.exit() }, 0.001) //Otherwise the log hasn't the time to be written
             break
         case 'clear':
             process.stdout.write("\u001b[2J\u001b[00H")
@@ -83,3 +66,35 @@ stdin.addListener("data", function (d) {
 })
 
 eventModule.setWelcomeMessage() //Define Welcome Message on the account = All good
+
+
+function checkLogFiles(logDir) {
+    if (!fs.existsSync(logDir)) { //If log Directory does not exist
+        try {
+            fs.mkdirSync(logDir) //Create It
+        } catch (exception) {
+            console.log('Can\'t create the following directory : ' + logDir)
+            process.exit() // Quit to prevent crash
+        }
+        createFiles() //So create log files
+    } else if (!fs.existsSync(logDir + process.env.LOG_INFO_FILE) || !fs.existsSync(logDir + process.env.LOG_ERROR_FILE)) { //If one of the log files doesn't exist
+        createFiles() //Create them
+    }
+    
+    function createFiles() {
+        fs.writeFile(logDir + process.env.LOG_INFO_FILE, "", function (o) { //Create info Log file
+            if (o) {
+                console.log('Can\'t create the following file : ' + logDir + process.env.LOG_INFO_FILE)
+                throw o
+            }
+            logInfo.info(process.env.LOG_INFO_FILE + " has been created")
+        })
+        fs.writeFile(logDir + process.env.LOG_ERROR_FILE, "", function (o) { //Create Error Log file
+            if (o) {
+                console.log('Can\'t create the following file : ' + logDir + process.env.LOG_ERROR_FILE)
+                throw o
+            }
+            logInfo.info(process.env.LOG_ERROR_FILE + " has been created")
+        })
+    }
+}

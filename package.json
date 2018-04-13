@@ -7,6 +7,7 @@
         "stop": "killall node"
     },
     "dependencies": {
+        "dotenv": "^5.0.1",
         "simple-node-logger": "^0.93.37",
         "twit": "~2.2"
     },
@@ -32,6 +33,8 @@
     },
     "contributors": [
         "ttzel (https://github.com/ttezel/twit)"
-     ],
-     "engines" : { "node" : ">=8.2.0" }
+    ],
+    "engines": {
+        "node": ">=8.2.0"
+    }
 }

@@ -1,12 +1,10 @@
 //Setting up local letaibles
-let config = null,
-    twit = null,
+let twit = null,
     errorLog = null,
     infoLog = null
 
 //Receive all data
 let init = function (infos) {
-    config = infos.config
     twit = infos.twit
     errorLog = infos.errorLog
     infoLog = infos.infoLog
@@ -14,9 +12,9 @@ let init = function (infos) {
 
 //When you are identified in a tweet
 let identified = function (event) {
-    if (event.user.id != config.data.userID){
+    if (event.user.id != process.env.USER_ID){
         for (let i = 0, len = event.entities.user_mentions.length; i < len; i++) {
-            if(event.entities.user_mentions[i].id == config.data.userID){
+            if(event.entities.user_mentions[i].id == process.env.USER_ID){
                 likeTweet(event.id_str, event.user)
                 break
             }
@@ -26,15 +24,15 @@ let identified = function (event) {
 
 //When you are followed by someone
 let followed = function (event) {
-    if(event.source.id !== config.data.userID){
-        infoLog.info(regexAll(config.console.new_follower, event.source.screen_name, event.source.name))
-        tweetText(regexAll(config.messages.new_follower, event.source.screen_name, event.source.name))
+    if(event.source.id !== process.env.USER_ID){
+        infoLog.info(regexAll(process.env.NEW_FOLLOWER, event.source.screen_name, event.source.name))
+        tweetText(regexAll(process.env.NEW_FOLLOWER, event.source.screen_name, event.source.name))
     }
 }
 
 //When one of your tweet is quoted
 let quoted = function (event) {
-    if(event.source.id != config.data.userID){
+    if(event.source.id != process.env.USER_ID){
         likeTweet(event.target_object.id_str, event.target_object.user)
     }
 }
@@ -49,7 +47,7 @@ let tweetText = function (text) {
         if(err){
             errorLog.error('An error occured : ' + err)
         }else{
-            infoLog.info(config.console.tweeted.replace(/%text%/gi, text))
+            infoLog.info(process.env.TWEETED.replace(/%text%/gi, text))
         }
     }
 }
@@ -59,7 +57,7 @@ let setWelcomeMessage = function () {
     let params = {
         "welcome_message": {
             "message_data": {
-                "text": config.messages.welcome_message
+                "text": process.env.WELCOME_MESSAGE
             }
         }
     }
@@ -70,7 +68,7 @@ let setWelcomeMessage = function () {
         if(err){
             errorLog.error('An error occured : ' + err)
         }else{
-            infoLog.info(config.console.welcome_message_defined.replace(/%text%/gi, params.welcome_message.message_data.text))
+            infoLog.info(process.env.WELCOME_MESSAGE_DEFINED.replace(/%text%/gi, params.welcome_message.message_data.text))
         }
     }
 }
@@ -87,7 +85,7 @@ let likeTweet = function (tweetID, author) {
         if(err){
             errorLog.error('An error occured : ' + err)
         }else{
-            infoLog.info(regexAll(config.console.liked, author.screen_name, author.name))
+            infoLog.info(regexAll(process.env.LIKED, author.screen_name, author.name))
         }
     }
 }
@@ -103,7 +101,7 @@ let deleteTweet = function (tweetID) {
         if (err) {
             errorLog.error('An error occured : ' + err)
         } else {
-            infoLog.info(config.console.tweet_deleted)
+            infoLog.info(process.env.TWEET_DELETED)
         }
     }
 }
@@ -112,7 +110,7 @@ let deleteTweet = function (tweetID) {
 let receiveMessage = function (event) {
     let to = event.direct_message.recipient.screen_name,
         splited = event.direct_message.text.toLowerCase().split(' ')
-    if (event.direct_message.recipient.id === config.data.userID) {
+    if (event.direct_message.recipient.id === process.env.USER_ID) {
         if (splited.indexOf('bot') !== -1) {
             //In developpement
         }
@@ -122,7 +120,7 @@ let receiveMessage = function (event) {
 //Get ID of one of your tweets with the following text
 let getTweetID = function (text) {
     let params = {
-        q: text + ' from:' + config.data.user
+        q: text + ' from:' + process.env.USERNAME
     }
 
     twit.get('search/tweets', params, tweets)
@@ -152,7 +150,7 @@ let retweetTweetID = function (id) {
         if (err){
             errorLog.error('An Error Occured while trying to retweet ' + err)
         }else{
-            infoLog.log(regexAll(config.console.retweeted, data.user.screen_name, data.user.name))
+            infoLog.log(regexAll(process.env.RETWEETED, data.user.screen_name, data.user.name))
         }
     }
 }
