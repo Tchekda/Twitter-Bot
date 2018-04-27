@@ -1,6 +1,6 @@
 {
     "name": "twitter_bot",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Twitter Bot by Tchekda",
     "scripts": {
         "start": "node bot.js",

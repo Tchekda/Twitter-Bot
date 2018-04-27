@@ -173,4 +173,3 @@ module.exports = {
     receiveMessage:     receiveMessage,
     retweetKeyWords:    retweetKeyWord
 }
-
