@@ -9,7 +9,7 @@
     "dependencies": {
         "dotenv": "^5.0.1",
         "simple-node-logger": "^0.93.37",
-        "twit": "~2.2"
+        "twit": "^2.2.10"
     },
     "repository": {
         "type": "git",
